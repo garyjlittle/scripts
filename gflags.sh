@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 # Check to see if this environment variable is set, otherwise
 # take the IP addres from the CLI argument $1
@@ -14,10 +14,19 @@ if [[ -z $IP ]] ; then
     echo "Need an IP address as argument"
     exit
 fi
+##  Remove old temp files first
+touch /tmp/gflags.old && rm /tmp/gflags.old
+touch /tmp/gflags.edit && rm /tmp/gflags.edit
+touch /tmp/gflags.changed && rm /tmp/gflags.changed
 
-##  Go and get the gflags file from the CVM
-echo Sending to CVM IP $IP
-wget -q -O - $IP:2009/h/gflags > /tmp/gflags.old
+##  Go and get the gflags file from the CVM set the timeout to 5 seconds
+##  and retries to 1.  It should not take > 5 seconds to reach 2009 handler.
+echo Connecting to CVM IP $IP
+wget -t 1 -T 5 -q -O - $IP:2009/h/gflags > /tmp/gflags.old
+if [[ $? -gt 0 ]] ; then
+    echo "wget failed to connect to $IP"
+    exit 1
+fi
 cp /tmp/gflags.old /tmp/gflags.edit
 #  Edit one copy
 vim /tmp/gflags.edit
@@ -34,6 +43,4 @@ do
         wget -q -O - $IP:2009/h/gflags?$FLAG
     fi
 done
-#rm /tmp/gflags.old
-#rm /tmp/gflags.edit
 
