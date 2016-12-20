@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
 
 # Check to see if this environment variable is set, otherwise
 # take the IP addres from the CLI argument $1
@@ -34,8 +34,7 @@ vim /tmp/gflags.edit
 # Get the changes between the current flag set, and the
 # flags as edited in vim, also ensure both files exist before proceding
 #
-sdiff /tmp/gflags.old /tmp/gflags.edit  -s | awk '{ print $3 }' | cut -c 3-999 > /tmp/gflags.changed
-
+sdiff /tmp/gflags.old /tmp/gflags.edit -s | awk 'BEGIN { FS = "|" } ; { print $2 }'|awk '{ print $1 }'|cut -c 3-999 > /tmp/gflags.changed
 # Now send the changed flag back to the CVM
 for FLAG in `cat /tmp/gflags.changed`
 do
