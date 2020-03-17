@@ -1,2 +1,11 @@
 # scripts
 Public scripts
+
+## measure_device
+This can be used to give a quick summary of performance characteristics for a given device that has a filesystem mounted on it.  We use a filesystem (with directIO) so that we can measure write performance in a "brown field" environment e.g. one where a filesystem is already in existence.
+
+### usage
+```
+./measure_device.sh sdb
+./measure_device.sh nvme1n1p1
+```
