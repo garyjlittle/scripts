@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/bash 
 
 DEVICE=$1
 SIZE=10g
@@ -11,7 +11,7 @@ if [[ -z $DEVICE ]] ; then
   exit 1
 fi
 
-MOUNT=$(df | grep $DEVICE | awk '{ print $6 }')
+MOUNT=$(df | grep /dev/$DEVICE | awk '{ print $6 }')
 
 if [[ -z $MOUNT ]] ; then
   echo Could not find mount point for $DEVICE
